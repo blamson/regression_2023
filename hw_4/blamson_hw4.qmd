@@ -1,0 +1,122 @@
+---
+title: "Homework 4"
+author: "Brady Lamson"
+format: pdf
+editor: visual
+---
+
+```{r}
+gpa <- read.table("../datasets/gpa.txt", header = T)
+```
+
+# Problem 4.14
+## Part A
+```{r}
+no_int_lm <- lm(gpa ~ 0 + act.score, data = gpa)
+no_int_lm |> summary()
+```
+
+$$Y = 0 - 3.0276X_1 + \epsilon$$
+
+## Part B
+
+```{r}
+conf <- confint(no_int_lm, level = .95)
+glue::glue(
+    "With 95% confidence, the slope of beta_1 is in  
+    ({conf[1] |> round(3)}, {conf[2] |> round(3)})
+    "
+)
+```
+
+As the confidence interval does not contain 0, there is significant evidence to indicate that, in the no intercept model, there is a positive relationship between act scores and college freshman gpa.
+
+## Part C
+
+```{r}
+my.new.data <- data.frame(act.score = 30)
+predict(no_int_lm, newdata = my.new.data, interval = "confidence",
+level = 0.95)
+```
+
+# Problem 4.15
+
+## Part A
+
+```{r}
+plot(
+    x = gpa$act.score, y = gpa$gpa, pch=20, 
+    xlim = c(0,35), ylim = c(0,4)
+)
+abline(no_int_lm)
+
+```
+
+The linear regression though the origin does not appear to be a good fit. 
+
+## Part B
+
+```{r}
+sum_resid <- no_int_lm$residuals |> sum()
+
+glue::glue("The sum of the residuals is {sum_resid |> round(3)}")
+```
+
+The residuals do not sum to 0.
+
+```{r}
+plot(no_int_lm$fitted.values, no_int_lm$residuals, pch=20)
+```
+
+The residuals seem to trend downward as the fitted values increase. 
+
+## Part C
+
+```{r}
+full_reg <- lm(gpa ~ act.score, data = gpa)
+
+anova(no_int_lm, full_reg)
+```
+
+$$
+\begin{aligned}
+H_0: E(Y) &= \beta_0 + \beta_1 X \\
+H_a: E(Y) &\neq \beta_0 + \beta_1 X \\
+\alpha &= 0.005 \\ 
+F &= 43.401 \\
+p &\approx 1.304 \cdot 10^{-9}
+\end{aligned}
+$$
+
+As $p < \alpha$, there is significant evidence to indicate the linear regression model is not sufficient to explain the relationship in the data. 
+
+# Problem 5.5
+
+```{r}
+finance <- read.table("../datasets/CH05PR05.txt", header = F)
+```
+
+## Part 1
+
+```{r}
+t(finance$V2) %*% finance$V2
+```
+
+## Part 2
+
+```{r}
+t(finance$V1) %*% finance$V1
+```
+
+```{r}
+t(finance$V1) %*% finance$V2
+```
+
+# Problem 5.13
+
+```{r}
+solve(t(finance$V1) %*% finance$V1)
+```
+
+# Problem 5.24
+
