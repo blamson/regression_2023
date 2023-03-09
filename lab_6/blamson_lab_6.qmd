@@ -5,23 +5,35 @@ format: pdf
 editor: visual
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
-```{r}
-1 + 1
+```{r, echo=FALSE, include=FALSE}
+data <- read.table("../datasets/properties.txt", header = T)
+data$Op.Expense <- NULL
+data
 ```
 
-You can add options to executable code like this
-
-```{r}
-#| echo: false
-2 * 2
+```{r, echo=FALSE, include=FALSE}
+reg <- lm(Rent.Rate ~ Age * Vac.Rate * Sq.Ft - Age:Vac.Rate:Sq.Ft - Age:Sq.Ft - Vac.Rate:Sq.Ft, data = data)
+reg |> summary()
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+## 2a
+
+$t = -.287$
+
+$p = .77$
+
+No
+
+## 2b
+
+Is age:vac significant? No
+
+Is age:sq.ft significant? No
+
+Is vac:sq.ft rate significant? No
+
+# 4
+
+Is age:vac significant? Yes
+
+Is Sq.Ft significant? Yes
